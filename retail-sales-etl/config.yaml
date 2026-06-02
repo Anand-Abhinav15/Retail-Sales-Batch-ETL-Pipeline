@@ -1,0 +1,11 @@
+database:
+  host: localhost
+  port: 5432
+  dbname: retail_dwh
+  user: postgres
+  password: 1907
+
+paths:
+  raw_data: data/raw_csv
+  processed_data: data/processed
+  processed_tracking: data/processed/processed_files.txt
