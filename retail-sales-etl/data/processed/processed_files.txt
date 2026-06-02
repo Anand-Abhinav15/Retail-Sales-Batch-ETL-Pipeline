@@ -3,3 +3,4 @@ sales_2026_01_02.csv
 sales_2026_01_03.csv
 sales_2026_01_04.csv
 sales_2026_01_05.csv
+test_bad_data.csv

@@ -1,0 +1,11 @@
+order_id,customer_id,product_id,store_id,order_date,quantity,unit_price,payment_method,region
+
+1,101,501,1,2026-01-01,2,500,Credit Card,North
+
+2,,502,1,2026-01-01,1,1200,UPI,South
+
+3,103,503,2,INVALID_DATE,4,300,Cash,West
+
+4,104,504,1,2026-01-01,-2,500,Cash,East
+
+5,105,505,1,2026-01-01,3,-100,UPI,North

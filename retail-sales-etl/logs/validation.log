@@ -1,0 +1,4 @@
+2026-06-02 22:51:18,894 - WARNING - Found 1 null values
+2026-06-02 22:51:19,009 - WARNING - Found 1 negative quantities
+2026-06-02 22:51:19,010 - WARNING - Found 1 negative prices
+2026-06-02 22:51:19,033 - WARNING - Found 1 invalid dates

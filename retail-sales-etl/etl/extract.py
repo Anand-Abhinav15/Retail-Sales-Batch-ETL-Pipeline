@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import yaml
 
+from validations import run_validations
+
 def load_config():
     """
     Load configuration from config.yaml
@@ -53,13 +55,19 @@ def get_new_files(all_files, processed_files):
         ]
 
 def read_csv_file(file_path):
-     """
-     Read a CSV into DataFrame
-     """
+    """
+    Read a CSV into DataFrame
+    """
 
-     df = pd.read_csv(file_path)
+    df = pd.read_csv(file_path)
+    validation_results = run_validations(df)
 
-     return df
+    print(
+        f"Validation Results: "
+        f"{validation_results}"
+    )
+
+    return df
 
 def mark_file_as_processed(file_name, tracking_file):
     """
