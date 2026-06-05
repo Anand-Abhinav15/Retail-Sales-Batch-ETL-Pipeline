@@ -8,4 +8,4 @@ order_id,customer_id,product_id,store_id,order_date,quantity,unit_price,payment_
 
 4,104,504,1,2026-01-01,-2,500,Cash,East
 
-5,105,505,1,2026-01-01,3,-100,UPI,North
+5,105,506,1,2026-01-01,3,-100,UPI,North

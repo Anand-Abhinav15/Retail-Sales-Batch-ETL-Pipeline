@@ -3,6 +3,7 @@ import pandas as pd
 import yaml
 
 from validations import run_validations
+from transform import transform_data
 
 def load_config():
     """
@@ -10,6 +11,7 @@ def load_config():
     """
     with open("config.yaml", "r") as file:
         return yaml.safe_load(file)
+
 
 def get_all_files(raw_data_path):
     """
@@ -43,31 +45,26 @@ def get_processed_files(tracking_file):
     
     return processed
 
-def get_new_files(all_files, processed_files):
-        """
-        Compare all files vs processed files
-        """
 
-        return [
-             file
-             for file in all_files
-             if file not in processed_files
-        ]
+def get_new_files(all_files, processed_files):
+    """
+    Compare all files vs processed files
+    """
+
+    return [
+            file
+            for file in all_files
+            if file not in processed_files
+    ]
+
 
 def read_csv_file(file_path):
     """
     Read a CSV into DataFrame
     """
 
-    df = pd.read_csv(file_path)
-    validation_results = run_validations(df)
+    return pd.read_csv(file_path)
 
-    print(
-        f"Validation Results: "
-        f"{validation_results}"
-    )
-
-    return df
 
 def mark_file_as_processed(file_name, tracking_file):
     """
@@ -101,26 +98,44 @@ def main():
     print(f"New files detected: {len(new_files)}")
 
     if not new_files:
-        print("No new files to process.")
+        print("\nNo new files to process.")
         return
     
     for file_name in new_files:
-        print(f"Processing: {file_name}")
+        print(f"\nProcessing: {file_name}")
 
         file_path = os.path.join(
             raw_data_path,
             file_name
         )
 
+        #Extract ======================
+
         df = read_csv_file(file_path)
 
         print(f"Rows loaded: {len(df)}")
 
-        print(df.head())
+        #Validate =====================
 
-        # Temmporary:
-        # later Airflow will call validation
-        # validation(df)
+        validation_results = run_validations(df)
+
+        print(
+            f"Validation Results: "
+            f"{validation_results}"
+        )
+
+        #Transform =====================
+        
+        df = transform_data(df)
+
+        print("\nTransformed Data:")
+
+        print(
+            f"\nRows after transformation: "
+            f"{len(df)}"
+        )
+
+        #MARK FILE PROCESSED ===============
 
         mark_file_as_processed(
             file_name, 
