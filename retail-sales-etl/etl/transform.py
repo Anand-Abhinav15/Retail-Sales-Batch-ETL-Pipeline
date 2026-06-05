@@ -21,5 +21,45 @@ def remove_invalid_records(df):
 
     return df
 
+def standardize_dates(df): 
+    df["order_date"] = pd.to_datetime(
+        df["order_date"]
+    )
+
+    df["order_date"] = df["order_date"].dt.strftime(
+        "%Y-%m-%d"
+    )
+
+    return df
+
+
+def create_total_amount(df):
+
+    df["total_amount"] = df["quantity"] * df["unit_price"]
+
+    return df
+
+def add_load_timestamp(df):
+
+    df["load_timestamp"] = datetime.now()
+
+    return df
+
+def transform_data(df):
+
+    df = remove_duplicates(df)
+
+    df = remove_invalid_records(df)
+
+    df = standardize_dates(df)
+
+    df = create_total_amount(df)
+
+    df = add_load_timestamp(df)
+
+    return df
+
+
+
 
 
