@@ -5,6 +5,12 @@ import yaml
 from validations import run_validations
 from transform import transform_data
 
+from file_tracker import (
+    get_processed_files,
+    mark_file_processed
+)
+
+
 def load_config():
     """
     Load configuration from config.yaml
@@ -27,58 +33,31 @@ def get_all_files(raw_data_path):
     return sorted(files)
 
 
-
-def get_processed_files(tracking_file):
-    """
-    Read already processed files
-    """
-
-    if not os.path.exists(tracking_file):
-        return set()
-    
-    with open(tracking_file, "r") as file:
-        processed = {
-            line.strip()
-            for line in file.readlines()
-            if line.strip()
-        }
-    
-    return processed
-
-
 def get_new_files(all_files, processed_files):
     """
     Compare all files vs processed files
     """
 
     return [
-            file
-            for file in all_files
-            if file not in processed_files
+        file
+        for file in all_files
+        if file not in processed_files
     ]
 
 
 def read_csv_file(file_path):
     """
-    Read a CSV into DataFrame
+    Read CSV into dataframe
     """
 
     return pd.read_csv(file_path)
 
 
-def mark_file_as_processed(file_name, tracking_file):
-    """
-    Save file name into tracking file
-    """
-
-    with open(tracking_file, "a") as file:
-        file.write(file_name + "\n")
-
 def main():
+
     config = load_config()
-     
+
     raw_data_path = config["paths"]["raw_data"]
-    tracking_file = config["paths"]["processed_tracking"]
 
     print("\n============ EXTRACT LAYER ============\n")
 
@@ -86,7 +65,8 @@ def main():
 
     print(f"Total files found: {len(all_files)}")
 
-    processed_files = get_processed_files(tracking_file)
+    # Read from PostgreSQL table
+    processed_files = get_processed_files()
 
     print(f"Already processed: {len(processed_files)}")
 
@@ -100,8 +80,9 @@ def main():
     if not new_files:
         print("\nNo new files to process.")
         return
-    
+
     for file_name in new_files:
+
         print(f"\nProcessing: {file_name}")
 
         file_path = os.path.join(
@@ -109,13 +90,17 @@ def main():
             file_name
         )
 
-        #Extract ======================
+        # ====================================
+        # EXTRACT
+        # ====================================
 
         df = read_csv_file(file_path)
 
         print(f"Rows loaded: {len(df)}")
 
-        #Validate =====================
+        # ====================================
+        # VALIDATE
+        # ====================================
 
         validation_results = run_validations(df)
 
@@ -124,9 +109,12 @@ def main():
             f"{validation_results}"
         )
 
-        #Transform =====================
-        
+        # ====================================
+        # TRANSFORM
+        # ====================================
+
         df = transform_data(df)
+        print(df.columns.tolist())
 
         print("\nTransformed Data:")
 
@@ -135,17 +123,18 @@ def main():
             f"{len(df)}"
         )
 
-        #MARK FILE PROCESSED ===============
+        print(df.head())
 
-        mark_file_as_processed(
-            file_name, 
-            tracking_file
+        # ====================================
+        # MARK FILE PROCESSED
+        # ====================================
+
+        mark_file_processed(file_name)
+
+        print(
+            f"{file_name} marked as processed."
         )
 
-        print(f"{file_name} marked as processed.\n")
 
 if __name__ == "__main__":
     main()
-
-
-

@@ -8,4 +8,3 @@ database:
 paths:
   raw_data: data/raw_csv
   processed_data: data/processed
-  processed_tracking: data/processed/processed_files.txt

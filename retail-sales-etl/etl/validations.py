@@ -19,7 +19,7 @@ def validate_nulls(df):
             f"Found {null_count} null values"
         )
 
-    return len(null_count)
+    return int(null_count)
 
 def validate_duplicates(df):
     """
@@ -33,7 +33,7 @@ def validate_duplicates(df):
             f"Found {duplicate_count} duplicate rows"
         )
 
-    return len(duplicate_count)
+    return int(duplicate_count)
 
 def validate_negative_quantity(df):
 
@@ -47,7 +47,7 @@ def validate_negative_quantity(df):
             f"Found {count} negative quantities"
         )
 
-    return len(count)
+    return int(count)
 
 def validate_negative_price(df):
 
@@ -61,7 +61,7 @@ def validate_negative_price(df):
             f"Found {count} negative prices"
         )
 
-    return len(count)
+    return int(count)
 
 def validate_dates(df):
 
@@ -80,7 +80,7 @@ def validate_dates(df):
             f"Found {invalid_dates} invalid dates"
         )
     
-    return len(invalid_dates)
+    return int(invalid_dates)
 
 def run_validations(df):
 
