@@ -5,7 +5,7 @@ import yaml
 from validations import run_validations
 from transform import transform_data
 
-from load import load_dimensions
+from load import load_to_warehouse
 
 from file_tracker import (
     get_processed_files,
@@ -116,8 +116,8 @@ def main():
         # ====================================
 
         df = transform_data(df)
-        load_dimensions(df)
-        
+        load_to_warehouse(df)
+
         print(df.columns.tolist())
 
         print("\nTransformed Data:")

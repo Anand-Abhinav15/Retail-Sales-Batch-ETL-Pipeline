@@ -103,7 +103,7 @@ def load_dim_date(df):
             )
 
 
-def load_dimensions(df):
+def load_to_warehouse(df):
 
     load_dim_customer(df)
 
@@ -113,7 +113,48 @@ def load_dimensions(df):
 
     load_dim_date(df)
 
-    print("Dimensions loaded successfully!!")
+    load_fact_sales(df)
+
+    print("Warehouse load completed!!")
 
 
+def load_fact_sales(df):
 
+    engine = get_engine()
+
+    with engine.begin() as conn:
+
+        for _, row in df.iterrows():
+
+            conn.exec_driver_sql(
+                f"""
+                INSERT INTO fact_sales(
+                    order_id,
+                    customer_id,
+                    product_id,
+                    store_id,
+                    date_id,
+                    payment_method,
+                    quantity,
+                    unit_price,
+                    total_amount,
+                    load_timestamp
+                )
+                VALUES (
+                    '{row["order_id"]}',
+                    '{int(row["customer_id"])}',
+                    '{int(row["product_id"])}',
+                    '{int(row["store_id"])}',
+                    '{row["order_date"]}',
+                    '{row["payment_method"]}',
+                    '{int(row["quantity"])}',
+                    '{float(row["unit_price"])}',
+                    '{float(row["total_amount"])}',
+                    '{row["load_timestamp"]}'
+                )
+                ON CONFLICT(order_id)
+                DO NOTHING;
+                """
+            )
+
+    print("Fact Table loaded successfully!!!")
