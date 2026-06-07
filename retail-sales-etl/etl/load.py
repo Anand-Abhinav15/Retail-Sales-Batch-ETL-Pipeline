@@ -51,10 +51,63 @@ def load_dim_store(df):
          df[["store_id", "region"]].drop_duplicates()
     )
 
-    with engine.begin() as conn:s
+    with engine.begin() as conn:
+
+        for _, row in stores.iterrows():
+
+            conn.exec_driver_sql(
+                f"""
+                INSERT INTO
+                dim_store (store_id, region) 
+                VALUES ({int(row['store_id'])}, '{row['region']}')
+                ON CONFLICT(store_id)
+                DO NOTHING;
+                """
+            )
 
 
+def load_dim_date(df):
 
+    engine = get_engine()
+
+    dates = (
+        df[['order_date']].drop_duplicates()
+    )
+
+    with engine.begin() as conn:
+
+        for _, row in dates.iterrows():
+
+            date_value = row["order_date"]
+
+            conn.exec_driver_sql(
+                f"""
+                INSERT INTO 
+                dim_date (date_id, year, month, day, quarter)
+                VALUES (
+                    '{date_value}',
+                    EXTRACT(YEAR FROM DATE '{date_value}),
+                    EXTRACT(MONTH FROM DATE '{date_value}),
+                    EXTRACT(DAY FROM DATE '{date_value}),
+                    EXTRACT(QUARTER FROM DATE '{date_value}),
+                )
+                ON CONFLICT(date_id)
+                DO NOTHING
+                """
+            )
+
+
+def load_dimensions(df):
+
+    load_dim_customer(df)
+
+    load_dim_product(df)
+
+    load_dim_store(df)
+
+    load_dim_date(df)
+
+    print("Dimensions loaded successfully!!")
 
 
 
