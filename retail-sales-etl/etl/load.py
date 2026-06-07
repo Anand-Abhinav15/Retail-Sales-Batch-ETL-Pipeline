@@ -1,4 +1,5 @@
-from etl.db import get_engine
+from db import get_engine
+import pandas as pd
 
 def load_dim_customer(df):
 
@@ -78,18 +79,23 @@ def load_dim_date(df):
 
         for _, row in dates.iterrows():
 
-            date_value = row["order_date"]
+            date_value = pd.to_datetime(row["order_date"])
+
+            year = int(date_value.year)
+            month = int(date_value.month)
+            day = int(date_value.day)
+            quarter = int(date_value.quarter)
 
             conn.exec_driver_sql(
                 f"""
                 INSERT INTO 
                 dim_date (date_id, year, month, day, quarter)
                 VALUES (
-                    '{date_value}',
-                    EXTRACT(YEAR FROM DATE '{date_value}),
-                    EXTRACT(MONTH FROM DATE '{date_value}),
-                    EXTRACT(DAY FROM DATE '{date_value}),
-                    EXTRACT(QUARTER FROM DATE '{date_value}),
+                    '{date_value.strftime("%Y-%m-%d")}',
+                    {year},
+                    {month},
+                    {day},
+                    {quarter}
                 )
                 ON CONFLICT(date_id)
                 DO NOTHING
