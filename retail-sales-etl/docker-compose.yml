@@ -1,0 +1,50 @@
+services:
+
+    postgres:   
+
+        image: postgres:15
+
+        container_name: retail_postgres
+
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: 1907
+            POSTGRES_DB: retail_dwh
+          
+        ports:
+          - "5432:5432"
+
+        volumes:
+          - postgres_data:/var/lib/postgresql/data
+
+
+    airflow:
+      image: apache/airflow:2.10.5
+
+      container_name: retail_airflow
+
+      depends_on:
+        - postgres
+
+      environment:
+        AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+
+      ports:
+        - "8080:8080"
+
+      volumes:
+        - ./airflow/dags:/opt/airflow/dags
+        - ./etl:/opt/airflow/etl
+        - ./data:/opt/airflow/data
+
+      command: standalone
+
+volumes:
+  postgres_data:
+
+
+
+
+
+
+

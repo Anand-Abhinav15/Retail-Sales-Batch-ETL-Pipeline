@@ -26,3 +26,7 @@
 2026-06-08 01:56:00,035 - WARNING - Found 1 negative quantities
 2026-06-08 01:56:00,036 - WARNING - Found 1 negative prices
 2026-06-08 01:56:00,036 - WARNING - Found 1 invalid dates
+2026-06-13 05:50:54,154 - WARNING - Found 1 null values
+2026-06-13 05:50:54,188 - WARNING - Found 1 negative quantities
+2026-06-13 05:50:54,189 - WARNING - Found 1 negative prices
+2026-06-13 05:50:54,189 - WARNING - Found 1 invalid dates
