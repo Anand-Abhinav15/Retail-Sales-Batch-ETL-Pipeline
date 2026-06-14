@@ -36,6 +36,8 @@ services:
         - ./airflow/dags:/opt/airflow/dags
         - ./etl:/opt/airflow/etl
         - ./data:/opt/airflow/data
+        - ./config.yaml:/opt/airflow/config.yaml
+        - ./config_docker.yaml:/opt/airflow/config_docker.yaml
 
       command: standalone
 

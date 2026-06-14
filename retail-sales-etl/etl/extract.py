@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import yaml
+from pathlib import Path
 
 from validations import run_validations
 from transform import transform_data
@@ -17,9 +18,24 @@ def load_config():
     """
     Load configuration from config.yaml
     """
-    with open("config.yaml", "r") as file:
-        return yaml.safe_load(file)
+    project_root = os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))
+    )
 
+    if os.getenv("AIRFLOW_HOME"):
+        config_file = "config_docker.yaml"
+    else:
+        config_file = "config.yaml"
+
+    config_path = os.path.join(
+        project_root,
+        config_file
+    )
+
+    print(f"Using config: {config_file}")
+
+    with open(config_path, "r") as file:
+        return yaml.safe_load(file)
 
 def get_all_files(raw_data_path):
     """
@@ -59,7 +75,11 @@ def main():
 
     config = load_config()
 
-    raw_data_path = config["paths"]["raw_data"]
+    #raw_data_path = config["paths"]["raw_data"]
+
+    BASE_DIR = Path(__file__).resolve().parent.parent
+
+    raw_data_path = BASE_DIR / "data" / "raw_csv"
 
     print("\n============ EXTRACT LAYER ============\n")
 

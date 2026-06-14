@@ -2,10 +2,10 @@ import logging
 import pandas as pd
 
 logging.basicConfig(
-    filename = "logs/validation.log",
     level = logging.INFO,
     format = "%(asctime)s - %(levelname)s - %(message)s"
 )
+logging.info("Validation started")
 
 def validate_nulls(df):
     """
